@@ -1,3 +1,5 @@
+from django.contrib import admin
+from django.urls import path,include
 from ninja import NinjaAPI
 from ninja import Schema,ModelSchema
 
@@ -20,20 +22,27 @@ class TopicSchema(ModelSchema):
 from typing import List
 
 @api.get("/flowers", response=List[FlowerSchema])
-def list_employees(request):
+def flowers(request):
     flowers = Flower.objects.all()
     return flowers
 @api.get("/vases", response=List[VaseSchema])
-def list_employees(request):
+def vases(request):
     vases = Vase.objects.all()
     return vases
 @api.get("/topics", response=List[TopicSchema])
-def list_employees(request):
+def topics(request):
     topics = Topic.objects.all()
     return topics
 
 
-from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("",include('generate.urls')),
     path("api/", api.urls),
+    
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
