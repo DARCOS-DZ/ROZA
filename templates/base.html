@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rosa VR</title>
+	<style>
+		#container2 {
+			position: fixed;
+			float: right;
+			right: 20px;
+			width: 100%;
+			height: 1000px;
+			background-color: rgb(109, 119, 119);
+			overflow-y: auto;
+			top: 8px;
+		}
+	</style>
+<body>
+	<div id="container2"></div>
+	<script src="{% static '3D/js/three.min.js' %}"></script>
+	<script src="{% static '3D/js/three.js' %}"></script>
+	<script src="{% static '3D/js/OrbitControls.js' %}"></script>
+	<script src="{% static '3D/js/GLTFLoader.js' %}"></script>
+	<script type="module">
+        "use strict";
+		import { OrbitControls } from '{% static "3D/jsm/controls/OrbitControls.js" %}';
+		import { GLTFLoader } from '{% static "3D/jsm/loaders/GLTFLoader.js" %}';
+		import { RGBELoader } from '{% static "3D/jsm/loaders/RGBELoader.js" %}';
+		import { RoughnessMipmapper } from '{% static "3D/jsm/utils/RoughnessMipmapper.js" %}';
+		var sence2, light12, light13, spot2, render2, control12, camera2;
+		var loader1 = new THREE.GLTFLoader();
+		sence2 = new THREE.Scene();
+		spot2 = new THREE.SpotLight(0xFFFFFF, 0.1);
+		spot2.shadow.bias = -0.01;
+		spot2.shadow.mapSize.width = 1024 * 4;
+		spot2.shadow.mapSize.height = 1024 * 4;
+		sence2.add(spot2);
+		render2 = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		render2.setPixelRatio(window.devicePixelRatio)
+		render2.setSize(containerWidth, containerHeight);
+		render2.physicallyCorrectLights = true;
+		render2.shadowMap.enabled = true;
+		render2.outputEncoding = THREE.sRGBEncoding;
+		render2.tonMapping = THREE.ReinhardToneMapping;
+		render2.tonMappingExposure = 2.3;
+		render2.shadowMap.enable = true;
+		container2.appendChild(render2.domElement);
+		camera2 = new THREE.PerspectiveCamera(75, containerWidth / containerHeight, 0.1, 1000);
+		control12 = new THREE.OrbitControls(camera2, render2.domElement);
+		render2.setClearColor("grey", 1);
+		camera2.position.set(0, 0, 200);
+		control12.update();
+		control12.update();
+		var containerWidth = container2.clientWidth;
+		var containerHeight = container2.clientHeight;
+		camera2.aspect = containerWidth / containerHeight;
+		camera2.updateProjectionMatrix();
+		render2.setSize(containerWidth, containerHeight);
+		window.addEventListener('resize', onWindowResi, false);
+		function onWindowResi() {
+			var containerWidth = container2.clientWidth;
+			var containerHeight = container2.clientHeight;
+			camera2.aspect = containerWidth / containerHeight;
+			camera2.updateProjectionMatrix();
+			render2.setSize(containerWidth, containerHeight);
+			render11()
+		}
+		const pmremGenerator = new THREE.PMREMGenerator(render2);
+		pmremGenerator.compileEquirectangularShader();
+		new RGBELoader()
+			.setDataType(THREE.UnsignedByteType)
+			.setPath('{% static "3D/textures/equirectangular/" %}')
+			.load('studio_small_08_1k.hdr', function (texture) {
+				const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+				sence2.environment = envMap;
+				texture.dispose();
+				pmremGenerator.dispose();
+				render11();
+			});
+		const roughnessMipmapper = new RoughnessMipmapper(render2);
+		var numchro = 0.4;
+		var number = 1;
+			fetch("{% static '3D/main.json' %}").then(function (response) {
+				//  API called successful!
+				return response.json();
+			}).then(function (data) {
+				//  JSON from  response
+				console.log(data.modelrose1);
+				for (let xx = 1; xx <= data.number1; xx++) {
+if (numchro == -0.4) {
+	numchro = 0.4
+} else {
+	numchro = -0.4
+}
+				logo2((Math.floor(Math.random() * 10)) * 2 * numchro, (Math.floor(Math.random() * xx)) * 0.1 * numchro, data.modelrose1);
+}
+			}).catch(function (err) {
+				// if an error
+				console.warn('Something went wrong.', err);
+			});
+		function logo2(v, ro, modros1) {
+			loader1.load('{% static "3D/models/" %}' + modros1 + '.glb', function (gltff) {
+				//face1.glb
+				console.log(gltff.scene);
+				gltff.scene.children[0].traverse(function (child) {
+
+					if (child.isMesh) {
+
+						if (child.name == "base") {
+							child.position.x = v;
+							if (v) {
+								v == -v
+							} else {
+								v == v
+							}
+							gltff.scene.position.x = Math.floor(Math.random() * 10);
+
+							child.position.y = Math.floor(Math.random() * 10);
+							child.position.z = Math.floor(Math.random() * 5);
+							child.rotation.z = ro;
+							child.rotation.x = ro;
+							child.rotation.y = -ro
+							child.receiveShadow = true;
+							child.castShadow = true;
+							child.material.flatShading = true;
+							child.material.transparent = true;
+							child.material.shading = THREE.SmoothShading
+							child.geometry.computeVertexNormals(true);
+							sence2.add(child);
+						}
+					}
+				});
+			}, (xhr) => {
+				console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+			}, (error) => {
+				console.log(error);
+			});
+		}
+		//  rose2 ------------------------------------------------------------------
+		var number = 1;
+		for (var xx = 1; xx <= number; xx++) {
+			if (numchro == -0.4) {
+				numchro = 0.4
+			} else {
+				numchro = -0.4
+			}
+		}
+		function rose2(v, ro) {
+			loader1.load(' {% static "3D/models/.glb" %} ', function (gltff) {
+				//face1.glb
+				console.log(gltff.scene);
+				gltff.scene.children[0].traverse(function (child) {
+					if (child.isMesh) {
+						child.position.x = v;
+						if (v) {
+							v == -v
+						} else {
+							v == v
+						}
+						child.position.x = Math.floor(Math.random() * 10);
+						child.position.y = Math.floor(Math.random() * 10);
+						gltff.scene.position.z = Math.floor(Math.random() * 5);
+						child.rotation.z = ro;
+						child.rotation.x = ro;
+						console.log(v)
+						child.rotation.y = -ro
+						sence2.add(child);
+					}
+				});
+			}, (xhr) => {
+				console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+			}, (error) => {
+				console.log(error);
+			});
+		}
+		//sndan();
+		function sndan() {
+			loader1.load(' {% static "3D/models/.glb" %} ', function (gltffsnd) {
+				//face1.glb
+				console.log(gltffsnd.scene);
+				gltffsnd.scene.children[0].traverse(function (childsndan) {
+					if (childsndan.isMesh) {
+						childsndan.material.metalness = 0.9;
+						childsndan.material.roughness = 0.02;
+						childsndan.material.exposure = 0.1;
+						childsndan.receiveShadow = true;
+						childsndan.castShadow = true;
+						//  childsndan.material.flatShading = true;
+						childsndan.material.transparent = true;
+						childsndan.material.opacity = 0.5;
+						sence2.add(childsndan);
+					}
+				});
+			}, (xhr) => {
+				console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+			}, (error) => {
+				console.log(error);
+			});
+		}
+		const newclock = new THREE.Clock()
+		control12.enabled = true;
+		function render11() {
+			requestAnimationFrame(render11);
+			render2.render(sence2, camera2);
+			control12.update();
+			camera2.updateMatrixWorld();
+		}
+	</script>
+</body>
+</html>

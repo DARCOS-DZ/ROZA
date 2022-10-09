@@ -32,7 +32,8 @@ def list_employees(request):
     topics = Topic.objects.all()
     return topics
 
-
+from .views import *
 from django.urls import path
 urlpatterns = [
+    path("",index,name="index")
 ]
