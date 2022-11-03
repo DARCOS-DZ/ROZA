@@ -1,327 +1,36 @@
 <!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Rosa VR</title>
-	<style>
-		html, body {
-			height: 100%;
-		  }
-		#container2 {
-			position: fixed;
-			width: 100%;
-			height: 100%;
-			background-color: grey;
-			overflow-y: auto;
-			top: 8px;
-		}
-	</style>
-<body>
-	<div id="container2"></div>
-	<script src="{% static '3D/js/three.min.js' %}"></script>
-	<script src="{% static '3D/js/three.js' %}"></script>
-	<script src="{% static '3D/js/OrbitControls.js'%}"></script>
-	<script src="{% static '3D/js/GLTFLoader.js' %}"></script>
-	<script type="moduel" src="{% static '3D/js/Raycaster.js' %}"></script>
-	<script src="{% static '3D/js/DragControls.js' %}"></script>
-	<script type="module">
-		import { OrbitControls } from '{% static "3D/jsm/controls/OrbitControls.js" %}';
-		import { GLTFLoader } from '{% static "3D/jsm/loaders/GLTFLoader.js" %}';
-		import { RGBELoader } from '{% static "3D/jsm/loaders/RGBELoader.js" %}';
-		import { RoughnessMipmapper } from '{% static "3D/jsm/utils/RoughnessMipmapper.js" %}';
-		var sence2, light12, light13, spot2, render2, control12, camera2;
-		var	dragrosee=[]
-		var container2= document.getElementById("container2")
-		var loader1 = new THREE.GLTFLoader();
-		sence2 = new THREE.Scene();
-		render2 = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-		render2.setPixelRatio(window.devicePixelRatio)
-		render2.setSize(containerWidth, containerHeight);
-		render2.physicallyCorrectLights = true;
-		render2.shadowMap.enabled = true;
-		render2.outputEncoding = THREE.sRGBEncoding;
-		render2.tonMapping = THREE.ReinhardToneMapping;
-		render2.tonMappingExposure = 2.3;
-		render2.shadowMap.enable = true;
-		container2.appendChild(render2.domElement);
-		camera2 = new THREE.PerspectiveCamera(90, containerWidth / containerHeight, 0.1, 1000);
-		render2.setClearColor(0xffffff, 1);
-		camera2.position.set(0, 0, 200);
-		var containerWidth = container2.clientWidth;
-		var containerHeight = container2.clientHeight;
-		camera2.aspect = containerWidth / containerHeight;
-		camera2.updateProjectionMatrix();
-		render2.setSize(containerWidth, containerHeight);
-		window.addEventListener('resize', onWindowResi, false);
-		function onWindowResi() {
-			var containerWidth = container2.clientWidth;
-			var containerHeight = container2.clientHeight;
-			camera2.aspect = containerWidth / containerHeight;
-			camera2.updateProjectionMatrix();
-			render2.setSize(containerWidth, containerHeight);
-			render11()
-		}
-
-
-		const pmremGenerator = new THREE.PMREMGenerator(render2);
-		pmremGenerator.compileEquirectangularShader();
-		new RGBELoader()
-			.setDataType(THREE.UnsignedByteType)
-			.setPath("{% static '3D/textures/equirectangular/' %}")
-			.load('studio_small_08_1k.hdr', function (texture) {
-				const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-				sence2.environment = envMap;
-				texture.dispose();
-				pmremGenerator.dispose();
-				render11();
-			});
-		const roughnessMipmapper = new RoughnessMipmapper(render2);
-		var numchro = 0.4;
-		var number = 8;
-		var showrose = 0;
-		var changePosition = 0.1;
-		var changeRotation = 0.1;
-/*		fetch(' {% static "3D/main.json" %}').then(function (response) {
-				//  API called successful!
-				return response.json();
-			}).then(function (data) {
-				//  JSON from  response
-
-				sndan(data.topic_id);
-
-				for (let numberrose1 = 1; numberrose1 <= data.roses[0].id; numberrose1++) {
-				rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[0].quantity);
-					if(numberrose1==data.roses[0].id){
-					for (let numberrose2 = 1; numberrose2 <= data.roses[1].id; numberrose2++) {
-						rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[1].quantity);
-								if(numberrose2==data.roses[1].id){
-								for (let numberrose3 = 1; numberrose3 <= data.roses[2].id; numberrose3++) {
-								rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[2].quantity);
-								if(numberrose3==data.roses[2].id){
-									for (let numberrose4 = 1; numberrose4 <= data.roses[3].id; numberrose4++) 
-										rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[3].quantity);}
-}
-				}
-			}
-
-}
-
-
-}
-var num1=1;
-var num2=1;
-			}).catch(function (err) {
-				// if an error
-				console.warn('Something went wrong.', err);
-			}); */
-			//?flower={"flower_id":4,"quantity":2}&flower={"flower_id":1,"quantity":3}&vase=1&topic=1
-			let array_of_flowers = {{array_of_flowers | safe}};
-			sndan("{{vase_obj.url}}"); // vase loading
-			array_of_flowers.forEach((flower)=>{
-			let random_number = Math.random();
-				console.log(flower)
-				for (let flower_iterator = 1; flower_iterator <= flower.quantity ; flower_iterator++) {
-					rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 300 ,flower.flower);
-
-				}
-
-			})
-		/*	for (let numberrose1 = 1; numberrose1 <= data.roses[0].id; numberrose1++) {
-			let random_number = Math.random();
-			rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[0].quantity);
-				if(numberrose1==data.roses[0].id){
-				for (let numberrose2 = 1; numberrose2 <= data.roses[1].id; numberrose2++) {
-					rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[1].quantity);
-							if(numberrose2==data.roses[1].id){
-							for (let numberrose3 = 1; numberrose3 <= data.roses[2].id; numberrose3++) {
-							rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[2].quantity);
-							if(numberrose3==data.roses[2].id){
-								for (let numberrose4 = 1; numberrose4 <= data.roses[3].id; numberrose4++) 
-									rose1((Math.floor(random_number * 10)) * 2 * changePosition, (Math.floor(random_number * 2)) * 3 , data.roses[3].quantity);}
-			}}}}}*/
-		
-		function rose1(v, ro, modros1) {
-		//	loader1.load('{% static "3D/models/" %}' + modros1 + '.glb', function (gltff) {
-			loader1.load(modros1, function (gltff) {
-		
-				console.log("uu")
-				//face1.glb
-			
-				gltff.scene.children[0].traverse(function (child) {
-
-					if (child.isMesh) {
-
-						if (child.name == "base") {
-							dragrosee.push(child)
-							if (ro) ro == -ro ; else ro == ro;
-						
-							let random_number = Math.random();
-							child.position.y = Math.floor(random_number* 5);
-							child.position.z = Math.floor(random_number* 10);
-							child.position.x = Math.floor(random_number* 5);
-							child.rotation.z = ro;
-							child.rotation.x = ro;
-							child.rotation.y = ro
-							child.receiveShadow = true;
-							child.castShadow = true;
-							child.material.flatShading = true;
-							child.material.transparent = true;
-							child.material.shading = THREE.SmoothShading
-							child.geometry.computeVertexNormals(true);
-
-							sence2.add(child);
-
-						}
-
-					}
-
-				});
-
-
-			}, (xhr) => {
-				
-			}, (error) => {
-				
-			});
-
-
-		}
-
-
-		control12 = new THREE.OrbitControls(camera2, render2.domElement);
-
-		const controls = new THREE.DragControls( dragrosee, camera2, render2.domElement );
-
-
-controls.addEventListener( 'dragstart',  ( event )=> {
-
-control12.enabled =false
-
-
-} );
-
-controls.addEventListener( 'dragend',  ( event )=> {
-control12.enabled =true
-
-
-} );
-
-		function sndan(snd) {
-		//	loader1.load('{% static "3D/models/" %}'+ snd+'.glb', function (gltffsnd) {
-			loader1.load(snd, function (gltffsnd) {
-				gltffsnd.scene.children[0].traverse(function (childsndan) {
-					if (childsndan.isMesh) {
-						childsndan.material.metalness = 0.9;
-						childsndan.material.roughness = 0.02;
-						childsndan.material.exposure = 0.1;
-						childsndan.receiveShadow = true;
-						childsndan.castShadow = true;
-						//  childsndan.material.flatShading = true;
-						childsndan.material.transparent = true;
-						childsndan.material.opacity = 0.5;
-						sence2.add(childsndan);
-					}
-				});
-			}, (xhr) => {
-				
-			}, (error) => {
-				
-			});
-
-		}
-		var widd=document.getElementById("container2");
-
-var swt;
-var swe;
-var xx;
-var yy;
-window.addEventListener('resize', swww, true);
-var arrsw=Array();
-
-
-function swww(){
-
-
-if(widd.width()<=600){
-swt="touchstart"
-swe="touchend"
-arrsw.push(swt);
-arrsw.push(swe);
-
-}else{
-swt="mousemove";
-swe="click";
-arrsw.push(swt);
-arrsw.push(swe);
-}
-
-
-return arrsw
-
-}
-
-document.addEventListener( arrsw[0], onPointerMove );
-
-
-
-function onPointerMove( event ) {
-if(widd.width()<600){
-pointer8.x = (  event.touches[0].clientX/ render2.domElement.clientWidth ) * 2 - 1;
-pointer8.y = - ( event.touches[0].clientY / render2.domElement.clientHeight ) * 2 + 1;
-}else{
-
-pointer8.x = (  event.offsetX / render2.domElement.clientWidth ) * 2 - 1;
-pointer8.y = - ( event.offsetY / render2.domElement.clientHeight ) * 2 + 1;
-
-
-}
-
-}
-
-
-render2.domElement.addEventListener(arrsw[1], renndd, false);
-   var raycaster8 = new THREE.Raycaster();
-   const pointer8 = new THREE.Vector2();
-   let INTERSECTED;
-
-		function renndd(){
-camera2.updateMatrixWorld();
-raycaster8.setFromCamera( pointer8, camera2 );
-const intersects5 = raycaster8.intersectObjects( sence2.children );
-
-
-if ( intersects5.length > 0 ) {
-
-console.log("fgfg")
-
-
-if ( INTERSECTED = intersects5[ 0 ].object ) {
-
-//if ( INTERSECTED ) console.log("fffff");
-
-INTERSECTED = intersects5[ 0 ].object;
-
-
-
-
-
-console.log(INTERSECTED.name);
-
-}
-
-
-} 
-
-}
-		function render11() {
-			requestAnimationFrame(render11);
-			render2.render(sence2, camera2);
-			camera2.updateMatrixWorld();
-		}
-	</script>
-
-</body>
+<html>
+	{% load static %}
+  <head>
+    <title>ROSA VR</title>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        background-color: #babbc5;
+        margin: 0px;
+      }
+      a {
+        color: #f00;
+      }
+      #info {
+        color: #000000;
+      }
+      input{
+        position: relative;
+        z-index: 5;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+<div class="water"></div>
+<script>
+	var best_position_json = {{best_position_json.position_file | safe}};
+	var array_of_flowers = {{array_of_flowers | safe}};
+	var vase_object = "{{vase_obj.object_3d.url}}"
+</script>
+<script  type="module" src="{% static 'src/index.js' %}"></script>
+  </body>
 </html>

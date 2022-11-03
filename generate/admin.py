@@ -4,4 +4,5 @@ from .models import *
 admin.site.register(Flower)
 admin.site.register(Vase)
 admin.site.register(Topic)
-
+admin.site.register(CategoryFlower)
+admin.site.register(Position)

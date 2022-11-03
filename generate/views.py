@@ -3,37 +3,43 @@ from .models import *
 import json
 
 def index(request):
-    #/flowers=[{flower_id:id,quantity=q},...]&vase_id=id&topic_id=id
+    #/flower=[{rose_id:id,quantity=q},...]&vase_id=id&topic_id=id
     if "flower" in request.GET:
-        flowers = request.GET.getlist("flower")#[{flower_id:id,quantity=q},...]
-        vase_id = request.GET.get("vase") # vase_id = id
-        topic_id = request.GET.get("topic")# topic_id = id
+        flowers = request.GET.getlist("flower",None)#[{rose_id:id,quantity=q},...]
+        vase_id = request.GET.get("vase",None) # vase_id = id
+        topic_id = request.GET.get("topic",None)# topic_id = id
+        total_quantity_flowers = 0
         array_of_flowers=[]
-        print(flowers)
         for flower in flowers :
-            print(flower)
             flower=json.loads(flower)
             # get flower object from database
             try:
-                flower_object = Flower.objects.get(id=int(flower["flower_id"]))
+                flower_object = Flower.objects.get(id=int(flower["rose_id"]))
             except Flower.DoesNotExist:
                 flower_object = None
             # combining all flowers 3d obj path in one array
-            if flower_object is not None:
-                array_of_flowers.append({"flower":flower_object.object_3d.url,"quantity":flower["quantity"]})
+            if flower_object is not None and flower_object.object_3d is not None:
+                total_quantity_flowers+=flower["quantity"] # count total quantity -> for get best position in vase
+                for j in range(flower["quantity"]):
+                    array_of_flowers.append(flower_object.object_3d.url)
         try:
-            vase_obj = Vase.objects.get(id=int(vase_id)).object_3d
+            vase_obj = Vase.objects.get(id=int(vase_id))
         except Vase.DoesNotExist:
             vase_obj=None
         try:
-            topic_obj = Topic.objects.get(id=int(topic_id)).object_3d
+            topic_obj = Topic.objects.get(id=int(topic_id))
         except Topic.DoesNotExist:
             topic_obj=None
-
+        try:
+            best_position_json = Position.objects.filter(vase=vase_obj).first()
+        except Position.DoesNotExist:
+            best_position_json = None 
+        print(best_position_json)
         context= {
             "array_of_flowers":json.dumps(array_of_flowers),
             "vase_obj":vase_obj,
-            "topic_obj":topic_obj
+            "topic_obj":topic_obj,
+            "best_position_json":best_position_json,
         }
         return render(request,"base.html",context)
 

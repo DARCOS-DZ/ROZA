@@ -9,6 +9,7 @@ class Flower(models.Model):
     price = models.FloatField(verbose_name="Price",default=0.0)
     special_price = models.FloatField(verbose_name="Promo Price",default=0.0)
     active = models.BooleanField(default=True)
+    category = models.ForeignKey("generate.CategoryFlower", on_delete=models.CASCADE,null=True)
     def __str__(self):
         return self.name
     
@@ -21,7 +22,7 @@ class Topic(models.Model):
     active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
-    
+  
 class Vase(models.Model):
     name=models.CharField(verbose_name="Name",max_length=200)
     name_ar=models.CharField(verbose_name="Arabic name",max_length=200)
@@ -33,4 +34,18 @@ class Vase(models.Model):
     active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
-    
+
+class CategoryFlower(models.Model):
+    name = models.CharField(max_length=120)
+    def __str__(self):
+        return self.name
+
+class Position(models.Model):
+    name = models.CharField("name", max_length=500)
+    vase = models.ForeignKey("generate.Vase", on_delete=models.CASCADE)
+    quantity = models.IntegerField("quantity")
+    position_file = models.JSONField("position_file")
+    def __str__(self):
+        return self.name
+
+
