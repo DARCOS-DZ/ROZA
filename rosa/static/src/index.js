@@ -10,7 +10,7 @@ var myTimeout;
 var camera, scene, renderer;
 var loader = new GLTFLoader(); 
 var best_position_json_array = best_position_json["data"];
-var best_position_json_vase = vase_best_position["vase"];
+var best_position_json_vase = vase_best_position;
 const position_vase_x = best_position_json_vase["position_vase_x"];
 const position_vase_y = best_position_json_vase["position_vase_y"];
 const position_vase_z = best_position_json_vase["position_vase_z"];

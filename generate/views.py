@@ -2,6 +2,24 @@ from django.shortcuts import render
 from .models import *
 import json
 
+def combining_flowers(flower_object,array_json_flowers_from_user,flower,array_of_flowers):
+    if flower_object is not None and flower_object.object_3d is not None:
+        # get category name for filter database  EX : we get {'LILY': 11, 'HYDRANGE': 2}
+        flower_key = flower_object.category.name
+        """=== Append Array Elements with json object ==="""
+        if flower_key in array_json_flowers_from_user:
+            array_json_flowers_from_user.update({flower_key:flower["quantity"]+array_json_flowers_from_user[f"{flower_key}"]})
+        else:
+            array_json_flowers_from_user.update({flower_key:flower["quantity"]})
+        for j in range(flower["quantity"]):
+            array_of_flowers.append({'name':flower_key,'url':flower_object.object_3d.url})
+        
+def try_except_get_django_model(Model,id_name):
+    try:
+        model = Model.objects.get(id=id_name)
+    except Model.DoesNotExist:
+        model=None
+    return model
 
 def index(request):
     #/flower=[{rose_id:id,quantity=q},...]&vase_id=id&topic_id=id
@@ -10,9 +28,11 @@ def index(request):
         flowers = request.GET.getlist("flower",None)#[{rose_id:id,quantity=q},...]
         vase_id = request.GET.get("vase",None) # vase_id = id
         topic_id = request.GET.get("topic",None)# topic_id = id
-        total_quantity_flowers = 0
         array_of_flowers=[]
-        array_json_flowers_from_user={}
+        topic = try_except_get_django_model(Topic,topic_id)
+        vase = try_except_get_django_model(Vase,vase_id)
+        array_json_flowers_from_user={"topic":1}
+
         for flower in flowers :
             flower=json.loads(flower)
             # get flower object from database
@@ -20,38 +40,25 @@ def index(request):
                 flower_object = Flower.objects.get(id=flower["rose_id"])
             except Flower.DoesNotExist:
                 flower_object = None
-            # combining all flowers 3d obj path in one array
-            if flower_object is not None and flower_object.object_3d is not None:
-                array_json_flowers_from_user.update({flower_object.reference:flower["quantity"]})
-                total_quantity_flowers+=flower["quantity"] # count total quantity -> for filter get best position in vase
-                for j in range(flower["quantity"]):
-                    array_of_flowers.append(flower_object.object_3d.url)
-        print("array_of_flowers",array_of_flowers)
-        print(array_json_flowers_from_user)
-        try:
-            vase_obj = Vase.objects.get(id=vase_id)
-        except Vase.DoesNotExist:
-            vase_obj=None
-        try:
-            topic_obj = Topic.objects.get(id=topic_id)
-        except Topic.DoesNotExist:
-            topic_obj=None
-        """
-        handel get best position logic 
-        /**********/
-        """
-        # 1 get user package data 
-        # 2 
+            """=== combining all flowers 3d obj path in one array ===="""
+            combining_flowers(flower_object,array_json_flowers_from_user,flower,array_of_flowers)
+        array_of_flowers.append({'name':"topic",'url':topic.object_3d.url})
+        
+        """*** Sorting array for syncronizing index ***"""
+        new_array_sorted = []
+        for i in sorted(array_of_flowers, key=lambda d: d['name']):
+            new_array_sorted.append(i["url"])
 
         try:
+            print("array_json_flowers_from_user",array_json_flowers_from_user)
             best_position_json = Position.objects.filter(refernce_json_flowers=array_json_flowers_from_user).first()
         except Position.DoesNotExist:
             best_position_json = None 
         print("best_position_json",best_position_json.position_file)
         context= {
-            "array_of_flowers":json.dumps(array_of_flowers),
-            "vase_obj":vase_obj,
-            "topic_obj":topic_obj,
+            "array_of_flowers":json.dumps(new_array_sorted ),
+            "vase_obj": vase,
+            "topic_obj":topic,
             "best_position_json":best_position_json,
         }
         return render(request,"base.html",context)
