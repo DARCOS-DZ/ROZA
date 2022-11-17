@@ -5,7 +5,7 @@ import json
 
 def index(request):
     #/flower=[{rose_id:id,quantity=q},...]&vase_id=id&topic_id=id
-    if "flower" in request.GET:
+    if "flower" and "vase" in request.GET:
         """*** GET user package data of flowers and topic"""
         flowers = request.GET.getlist("flower",None)#[{rose_id:id,quantity=q},...]
         vase_id = request.GET.get("vase",None) # vase_id = id
@@ -26,6 +26,7 @@ def index(request):
                 total_quantity_flowers+=flower["quantity"] # count total quantity -> for filter get best position in vase
                 for j in range(flower["quantity"]):
                     array_of_flowers.append(flower_object.object_3d.url)
+        print("array_of_flowers",array_of_flowers)
         print(array_json_flowers_from_user)
         try:
             vase_obj = Vase.objects.get(id=vase_id)
@@ -41,11 +42,12 @@ def index(request):
         """
         # 1 get user package data 
         # 2 
+
         try:
-            best_position_json = Position.objects.filter(vase=vase_obj).first()
+            best_position_json = Position.objects.filter(refernce_json_flowers=array_json_flowers_from_user).first()
         except Position.DoesNotExist:
             best_position_json = None 
-        print(best_position_json)
+        print("best_position_json",best_position_json.position_file)
         context= {
             "array_of_flowers":json.dumps(array_of_flowers),
             "vase_obj":vase_obj,

@@ -7,7 +7,7 @@ __pycache__
 media
 # Backup files # 
 *.bak 
-
+migrations
 # If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml

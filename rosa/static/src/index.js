@@ -4,27 +4,26 @@ import { OrbitControls } from "/static/src/OrbitControls.js";
 import { GLTFLoader } from "/static/src/GLTFLoader.js";
 import { RGBELoader } from '/static/src/RGBELoader.js';
 var container;
-var camera, scene, renderer
+var camera, scene, renderer;
 var numberrose1=0;
 var myTimeout;
 var camera, scene, renderer;
 var loader = new GLTFLoader(); 
 var best_position_json_array = best_position_json["data"];
-//var best_position_json_vase = best_position_json["vase"];
-// const position_vase_x = best_position_json_vase["position_vase_x"];
-// const position_vase_y = best_position_json_vase["position_vase_y"];
-// const position_vase_z = best_position_json_vase["position_vase_z"];
-// const rotation_vase_x = best_position_json_vase["rotation_vase_x"];
-// const rotation_vase_y = best_position_json_vase["rotation_vase_y"];
-// const rotation_vase_z = best_position_json_vase["rotation_vase_z"];
+var best_position_json_vase = vase_best_position["vase"];
+const position_vase_x = best_position_json_vase["position_vase_x"];
+const position_vase_y = best_position_json_vase["position_vase_y"];
+const position_vase_z = best_position_json_vase["position_vase_z"];
+/*const rotation_vase_x = best_position_json_vase["rotation_vase_x"];
+const rotation_vase_y = best_position_json_vase["rotation_vase_y"];
+const rotation_vase_z = best_position_json_vase["rotation_vase_z"];*/
 
-sndan(0,0,0,0,0,0);
+sndan(position_vase_x,position_vase_y,position_vase_z,0,0,0);
 
 //console.log(best_position_json["data"])
   container = document.createElement("div");
   document.body.appendChild(container);
-  container.setAttribute("id","rose_canva_vr");
-  container.setAttribute("style","display : none");
+ 
 
   // scene
   scene = new THREE.Scene();
@@ -59,28 +58,29 @@ for(let flower_index=0;flower_index<array_of_flowers.length;flower_index++){
   console.log(array_of_flowers[flower_index])
  rose1(array_of_flowers[flower_index], best_position_json_array[flower_index]['positionX'] ,best_position_json_array[flower_index]['positinY'] ,best_position_json_array[flower_index]['positinZ'],best_position_json_array[flower_index]['rotationX'],best_position_json_array[flower_index]['rotationY'],best_position_json_array[flower_index]['rotationZ'],array_of_flowers.length) ;
 }
-var tomixerloop=0;     
-//var tomixerloop=0;
-function  rose1(flower_object_url,pox,poy,poz,rox,roy,roz,lngthdata) {
-      loader.load( flower_object_url , function (gltff) {
+async function  rose1(flower_object_url,pox,poy,poz,rox,roy,roz,lngthdata) {
+      await loader.load( flower_object_url , function (gltff) {
       gltff.scene.children[0].traverse(function (child) {
         if (child.isMesh) {
-        console.log(child)
+        console.log(child.name)
+
           /* --- Set position dataset of flower --- */
-            child.position.x=pox
-            child.position.y=poy
-            child.position.z=poz
-            child.rotation.x= rox
-            child.rotation.y= roy
-            child.rotation.z= roz
-            scene.add(child);
-            if(numberrose1==lngthdata-1){
-              clearInterval(myTimeout)
-            }
+          child.position.x=pox
+          child.position.y=poy
+          child.position.z=poz
+          child.rotation.x= rox
+          child.rotation.y= roy
+          console.log(roz)
+        child.rotation.z= roz
+
+
+          scene.add(child);
+
         }
       });
     }, (xhr) => {
     }, (error) => {
+      console.log("error")
     }); 
   }
   function sndan(pox,poy,poz,rox,roy,roz) {
