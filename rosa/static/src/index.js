@@ -1,6 +1,7 @@
 "use strict";
 import * as THREE from "/static/src/three.module.js";
 import { OrbitControls } from "/static/src/OrbitControls.js";
+import { Water } from "/static/src/Water.js";
 import { GLTFLoader } from "/static/src/GLTFLoader.js";
 import { RGBELoader } from '/static/src/RGBELoader.js';
 var container;
@@ -63,7 +64,6 @@ async function  rose1(flower_object_url,pox,poy,poz,rox,roy,roz,lngthdata) {
       gltff.scene.children[0].traverse(function (child) {
         if (child.isMesh) {
         console.log(child.name)
-
           /* --- Set position dataset of flower --- */
           child.position.x=pox
           child.position.y=poy
@@ -71,16 +71,14 @@ async function  rose1(flower_object_url,pox,poy,poz,rox,roy,roz,lngthdata) {
           child.rotation.x= rox
           child.rotation.y= roy
           console.log(roz)
-        child.rotation.z= roz
-
-
+          child.rotation.z= roz
           scene.add(child);
-
         }
       });
     }, (xhr) => {
     }, (error) => {
-      console.log("error")
+      console.log("error");
+
     }); 
   }
   function sndan(pox,poy,poz,rox,roy,roz) {
@@ -127,7 +125,7 @@ async function  rose1(flower_object_url,pox,poy,poz,rox,roy,roz,lngthdata) {
  pmremGenerator.compileEquirectangularShader();
  new RGBELoader()
    .setDataType(THREE.UnsignedByteType)
-   .setPath('/static/textures/equirectangular/')
+   .setPath('/static/src/textures/equirectangular/')
    .load('studio_small_08_1k.hdr', function (texture) {
      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
      scene.environment = envMap;
@@ -157,4 +155,49 @@ function animate() {
 function render() {   
   renderer.render(scene, camera);
 
+}
+
+domen();
+
+function domen() {
+  loader.load(
+    "/static/src/textures/ball.glb",
+    function (gltff) {
+      console.log(loader1.onProgress);
+      //face1.glb
+      console.log(gltff.scene);
+      gltff.scene.traverse(function (child) {
+        if (child.isMesh) {
+          child.receiveShadow = true;
+          child.castShadow = true;
+
+          //  scene.add(child);
+
+          const waterGeometry = new THREE.SphereGeometry(5, 5, 5);
+
+          water = new Water(child.geometry, {
+            color: params.color,
+            scale: params.scale,
+            flowDirection: new THREE.Vector2(params.flowX, params.flowY),
+            textureWidth: 1024,
+            textureHeight: 1024,
+            transprant: true,
+            opacity: 0.5,
+          });
+
+          //water.position.y = 1;
+          //	water.rotation.x = Math.PI * - 0.5;
+          scene.add(water);
+        }
+      });
+    },
+    (xhr) => {
+      if ((xhr.loaded / xhr.total) * 100 == 100) {
+      }
+      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 }
