@@ -54,7 +54,11 @@ def index(request):
             best_position_json = Position.objects.filter(refernce_json_flowers=array_json_flowers_from_user).first()
         except Position.DoesNotExist:
             best_position_json = None 
-        print("best_position_json",best_position_json.position_file)
+        if best_position_json:
+            print("best_position_json",best_position_json.position_file)
+        else:
+            print("best_position_json is None",)
+
         context= {
             "array_of_flowers":json.dumps(new_array_sorted ),
             "vase_obj": vase,
