@@ -1,8 +1,13 @@
 from django.shortcuts import render
+
+from generate.utils import try_except_get_django_model
 from .models import *
 import json
 
 def combining_flowers(flower_object,array_json_flowers_from_user,flower,array_of_flowers):
+    """
+    combine or set position to user flowers choices
+    """
     if flower_object is not None and flower_object.object_3d is not None:
         # get category name for filter database  EX : we get {'LILY': 11, 'HYDRANGE': 2}
         flower_key = flower_object.category.name
@@ -14,12 +19,7 @@ def combining_flowers(flower_object,array_json_flowers_from_user,flower,array_of
         for j in range(flower["quantity"]):
             array_of_flowers.append({'name':flower_key,'url':flower_object.object_3d.url})
         
-def try_except_get_django_model(Model,id_name):
-    try:
-        model = Model.objects.get(id=id_name)
-    except Model.DoesNotExist:
-        model=None
-    return model
+
 def index(request):
     #/flower=[{rose_id:id,quantity=q},...]&vase_id=id&{topic_id:id,quantity=q}
     if "flower" and "vase" in request.GET:

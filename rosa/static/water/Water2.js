@@ -13,6 +13,8 @@ import {
 } from "/static/src/three.module.js";
 
 import { Reflector } from '/static/src/Reflector.js';
+import { Refractor } from '/static/src/Refractor.js';
+
 
 /**
  * References:

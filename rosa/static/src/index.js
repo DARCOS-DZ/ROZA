@@ -1,7 +1,7 @@
 "use strict";
 import * as THREE from "/static/src/three.module.js";
 import { OrbitControls } from "/static/src/OrbitControls.js";
-import { Water } from "/static/src/Water.js";
+//import { Water } from "/static/src/Water.js";
 import { GLTFLoader } from "/static/src/GLTFLoader.js";
 import { RGBELoader } from '/static/src/RGBELoader.js';
 var container;
@@ -41,19 +41,6 @@ sndan(position_vase_x,position_vase_y,position_vase_z,0,0,0);
    600
   );
  
- 		
-  /*fetch('/static/vases.json').then(async function (response) {
-    return await response.json();
-  }).then( function  (data) {
-    function icrenum(num){
-     }
-     try {setInterval( function (){  rose1(data.data[numberrose1]?.name,data.data[numberrose1]?.positionX,data.data[numberrose1]?.positinY,data.data[numberrose1]?.positinZ,data.data[numberrose1]?.rotationX,data.data[numberrose1]?.rotationY,data.data[numberrose1]?.rotationZ,data.data.length) ;icrenum(numberrose1++)}, 200);}
-     catch {
-      console.log("rrr")
-     }
-  }).catch(function (err) {
-    console.warn('Something went wrong.', err);
-  });*/
 
 for(let flower_index=0;flower_index<array_of_flowers.length;flower_index++){
   console.log(array_of_flowers[flower_index])
@@ -100,7 +87,7 @@ async function  rose1(flower_object_url,pox,poy,poz,rox,roy,roz,lngthdata) {
           childsndan.castShadow = true;
           //  childsndan.material.flatShading = true;
           childsndan.material.transparent = true;
-          childsndan.material.opacity = 0.5;
+          childsndan.material.opacity = 0;
           scene.add(childsndan);
 
         }
@@ -157,7 +144,7 @@ function render() {
 
 }
 
-domen();
+//domen();
 
 function domen() {
   loader.load(
