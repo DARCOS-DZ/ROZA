@@ -4,12 +4,10 @@
 *.pyc
 __pycache__
 db.sqlite3
-db.*
-sqlite3
-*.sqlite3
 # Backup files # 
 *.bak 
 migrations
+media/*
 # If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -20,7 +18,7 @@ migrations
 
 # AWS User-specific
 .idea/**/aws.xml
-
+add
 # Generated files
 .idea/**/contentModel.xml
 
