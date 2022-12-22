@@ -46,11 +46,12 @@ def index(request):
             """*** Sorting array for syncronizing index ***"""
             new_array_sorted = []
             """add topics to this array for combaining with flowers """
-            for t in range(topic["quantity"]):
-                array_of_flowers.append({'name':topic_obj.reference,'url':topic_obj.object_3d.url})
-            """ add topic in position json"""
-            array_json_flowers_from_user.update({topic_obj.reference:topic["quantity"]})
-            print("position",array_json_flowers_from_user)
+            if topic_obj:
+                for t in range(topic["quantity"]):
+                    array_of_flowers.append({'name':topic_obj.category.name,'url':topic_obj.object_3d.url})
+                """ add topic in position json"""
+                array_json_flowers_from_user.update({topic_obj.category.name:topic["quantity"]})
+                print("position",array_json_flowers_from_user)
             for i in sorted(array_of_flowers, key=lambda d: d['name']):
                 new_array_sorted.append(i["url"])
             array_json_flowers_from_user_sorted = dict(sorted(array_json_flowers_from_user.items()))# ->> for sync js data with python data sorted
