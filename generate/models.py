@@ -33,6 +33,7 @@ class Category(models.Model):
 class Topic(models.Model):
     id_reference = models.IntegerField(null=True,blank=True)
     reference=models.CharField(verbose_name="reference",unique=True,max_length=200)
+    category = models.ForeignKey("generate.Category", on_delete=models.CASCADE,null=True)
     object_3d=models.FileField(verbose_name="3D Image",upload_to="topics_obj",null=True,blank=True)
     def __str__(self):
         return self.reference
@@ -91,7 +92,6 @@ class Position(models.Model):
     quantity_2 = models.PositiveIntegerField(default=0)
     quantity_3 = models.PositiveIntegerField(default=0)
     quantity_4 = models.PositiveIntegerField(default=0)
-
     def save(self, *args, **kwargs):
        reference_package = list(self.refernce_json_flowers)
        reference_package_quantity = list(self.refernce_json_flowers.values())

@@ -27,7 +27,8 @@ def index(request):
         flowers = request.GET.getlist("flower",None)#[{rose_id:id,quantity=q},...]
         vase_id = request.GET.get("vase",None) # vase_id = id
         topic_id = request.GET.get("topic",None)#&topic={"id":id,"quantity":3}
-        topic = json.loads(topic_id)
+        try:topic = json.loads(topic_id) 
+        except : topic={}
         try:topic_obj = Topic.objects.get(id_reference=topic["id"])
         except Topic.DoesNotExist:topic_obj=None
         array_of_flowers=[]
