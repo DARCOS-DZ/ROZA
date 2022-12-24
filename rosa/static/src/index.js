@@ -33,7 +33,7 @@ sndan(position_vase_x,position_vase_y,position_vase_z,0,0,0);
   camera.position.set(
     0,
     0,
-   600
+   750
   );
   /*fetch('/static/vases.json').then(async function (response) {
     return await response.json();

@@ -31,6 +31,7 @@ def index(request):
         except : topic={}
         try:topic_obj = Topic.objects.get(id_reference=topic["id"])
         except Topic.DoesNotExist:topic_obj=None
+        print(topic_obj)
         array_of_flowers=[]
         vase = try_except_get_django_model(Vase,vase_id)
         if vase:
